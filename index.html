@@ -1,0 +1,1240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>BAKERY INTEL</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@500;600;700&display=swap');
+
+:root {
+  --bg:    #060a08;
+  --bg2:   #0c110e;
+  --bg3:   #111a14;
+  --green: #39ff6e;
+  --gd:    #1a8a3c;
+  --gdk:   #0d3d1c;
+  --amb:   #ffb800;
+  --red:   #ff3b3b;
+  --blu:   #3baaff;
+  --pur:   #b46cff;
+  --wh:    #d4e8d8;
+  --mt:    #4a6650;
+  --brd:   #1c3022;
+  --font:  'Share Tech Mono', monospace;
+  --sans:  'Rajdhani', sans-serif;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; touch-action:manipulation; }
+
+body {
+  background: var(--bg);
+  color: var(--wh);
+  font-family: var(--sans);
+  font-size: 16px;
+  min-height: 100vh;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+/* ── MISSION BAR ── */
+#mission-bar {
+  background: var(--bg2);
+  border-bottom: 1px solid var(--brd);
+  padding: 8px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.mb-label { font-family: var(--font); font-size: 9px; color: var(--mt); letter-spacing: 2px; }
+.mb-val { font-family: var(--font); font-size: 11px; color: var(--green); font-weight: 700; }
+.mb-progress { flex: 1; margin: 0 12px; height: 3px; background: var(--brd); border-radius: 1px; }
+.mb-fill { height: 100%; background: var(--green); border-radius: 1px; transition: width 0.5s; }
+
+/* ── HOME SCREEN ── */
+#home {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px 16px;
+  min-height: calc(100vh - 40px);
+}
+.home-header {
+  text-align: center;
+  margin-bottom: 28px;
+}
+.home-unit { font-family: var(--font); font-size: 10px; color: var(--gd); letter-spacing: 3px; margin-bottom: 6px; }
+.home-title { font-size: 26px; font-weight: 700; color: var(--wh); letter-spacing: 2px; }
+.home-sub { font-family: var(--font); font-size: 9px; color: var(--mt); letter-spacing: 2px; margin-top: 4px; }
+
+.role-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; max-width: 360px; }
+
+.role-btn {
+  border-radius: 6px;
+  border: 1px solid var(--brd);
+  background: var(--bg2);
+  padding: 18px 12px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  min-height: 100px;
+  transition: all 0.15s;
+  border-left: 3px solid;
+}
+.role-btn:active { transform: scale(0.97); }
+.role-icon { font-size: 26px; }
+.role-name { font-size: 20px; font-weight: 700; }
+.role-sub { font-family: var(--font); font-size: 9px; color: var(--mt); letter-spacing: 1px; }
+
+.r-jj    { border-left-color: var(--amb); }
+.r-baker { border-left-color: var(--blu); }
+.r-rider { border-left-color: var(--green); }
+.r-peter { border-left-color: var(--pur); }
+
+/* ── APP SHELL ── */
+#app { display: none; flex-direction: column; min-height: calc(100vh - 40px); }
+
+.topbar {
+  background: var(--bg2);
+  border-bottom: 1px solid var(--brd);
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 40px;
+  z-index: 50;
+}
+.tb-left { display: flex; align-items: center; gap: 8px; }
+.tb-badge { font-family: var(--font); font-size: 9px; padding: 3px 8px; border-radius: 2px; letter-spacing: 1px; }
+.tb-name { font-size: 18px; font-weight: 700; }
+.tb-day { font-family: var(--font); font-size: 9px; color: var(--mt); }
+.tb-right { display: flex; gap: 8px; align-items: center; }
+.change-btn {
+  font-family: var(--font); font-size: 9px; color: var(--amb);
+  background: rgba(255,184,0,.1); border: 1px solid rgba(255,184,0,.3);
+  border-radius: 2px; padding: 4px 8px; cursor: pointer; letter-spacing: 1px;
+}
+
+.content { flex: 1; padding: 14px 14px 80px; }
+
+/* ── BOTTOM NAV ── */
+.bottom-nav {
+  background: var(--bg2);
+  border-top: 1px solid var(--brd);
+  display: flex;
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 480px;
+  z-index: 50;
+}
+.nav-item {
+  flex: 1; padding: 10px 4px;
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  cursor: pointer; border: none; background: none;
+  color: var(--mt); font-family: var(--font); font-size: 8px; letter-spacing: 1px;
+  transition: color 0.15s;
+}
+.nav-item.active { color: var(--green); }
+.nav-icon { font-size: 16px; }
+
+/* ── SECTIONS ── */
+.sec-label {
+  font-family: var(--font); font-size: 10px; color: var(--green);
+  letter-spacing: 3px; margin-bottom: 10px; padding-bottom: 6px;
+  border-bottom: 1px solid var(--brd);
+  display: flex; align-items: center; gap: 6px;
+}
+.sec-label::before { content: '▸'; color: var(--gd); }
+
+/* ── CARDS ── */
+.card {
+  background: var(--bg2);
+  border: 1px solid var(--brd);
+  border-radius: 6px;
+  padding: 14px;
+  margin-bottom: 10px;
+}
+
+/* ── FORM FIELDS ── */
+.field { padding: 10px 0; border-bottom: 1px solid var(--brd); }
+.field:last-child { border-bottom: none; }
+.field-label { font-size: 15px; font-weight: 600; color: var(--wh); margin-bottom: 3px; }
+.field-sub { font-family: var(--font); font-size: 9px; color: var(--mt); margin-bottom: 6px; }
+
+.inp {
+  background: var(--bg3);
+  border: 1px solid var(--brd);
+  border-radius: 4px;
+  color: var(--wh);
+  font-family: var(--sans);
+  font-size: 18px;
+  font-weight: 600;
+  padding: 10px 12px;
+  width: 100%;
+  outline: none;
+}
+.inp:focus { border-color: var(--gd); }
+.inp-right { text-align: right; }
+
+textarea.inp { min-height: 72px; resize: none; font-size: 16px; line-height: 1.5; }
+
+/* ── COUNTER ── */
+.counter {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 6px;
+}
+.cnt-btn {
+  width: 54px; height: 54px;
+  border-radius: 50%;
+  border: 2px solid var(--brd);
+  background: var(--bg3);
+  color: var(--green);
+  font-size: 28px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.1s;
+  flex-shrink: 0;
+}
+.cnt-btn:active { transform: scale(0.93); background: var(--gdk); }
+.cnt-val {
+  flex: 1; text-align: center;
+  font-family: var(--font); font-size: 32px; font-weight: 700;
+  color: var(--green);
+}
+
+/* ── RATING ── */
+.rating-row { display: flex; gap: 8px; margin-top: 8px; }
+.rat-btn {
+  flex: 1; padding: 12px 6px;
+  border-radius: 4px; border: 1px solid var(--brd);
+  background: var(--bg3);
+  font-family: var(--font); font-size: 10px; letter-spacing: 1px;
+  color: var(--mt); cursor: pointer; text-align: center; transition: all 0.15s;
+}
+.rat-btn.sel-1 { border-color: var(--green); background: var(--gdk); color: var(--green); }
+.rat-btn.sel-2 { border-color: var(--amb); background: rgba(255,184,0,.1); color: var(--amb); }
+.rat-btn.sel-3 { border-color: var(--red); background: rgba(255,59,59,.1); color: var(--red); }
+
+/* ── QUALITY ── */
+.quality-row { display: flex; gap: 10px; margin-top: 8px; }
+.qual-btn {
+  flex: 1; padding: 16px 6px;
+  border-radius: 4px; border: 2px solid var(--brd);
+  background: var(--bg3); cursor: pointer;
+  font-size: 28px; text-align: center; transition: all 0.15s;
+}
+.qual-btn.active { border-color: var(--green); background: var(--gdk); }
+.qual-btn:active { transform: scale(0.95); }
+
+/* ── NET PROFIT LIVE ── */
+.net-box {
+  background: var(--gdk);
+  border: 1px solid var(--gd);
+  border-radius: 6px;
+  padding: 14px;
+  text-align: center;
+  margin: 10px 0;
+}
+.net-label { font-family: var(--font); font-size: 9px; color: var(--mt); letter-spacing: 2px; margin-bottom: 6px; }
+.net-val { font-family: var(--font); font-size: 32px; font-weight: 700; color: var(--green); }
+.net-val.negative { color: var(--red); }
+
+/* ── OVEN STATUS ── */
+.status-row { display: flex; gap: 8px; margin-top: 8px; }
+.stat-btn {
+  flex: 1; padding: 10px;
+  border-radius: 4px; border: 1px solid var(--brd);
+  background: var(--bg3); font-family: var(--font);
+  font-size: 9px; letter-spacing: 1px; color: var(--mt);
+  cursor: pointer; text-align: center; transition: all 0.15s;
+}
+.stat-btn.active-ok  { border-color: var(--green); background: var(--gdk); color: var(--green); }
+.stat-btn.active-warn { border-color: var(--amb); background: rgba(255,184,0,.1); color: var(--amb); }
+.stat-btn.active-err { border-color: var(--red); background: rgba(255,59,59,.1); color: var(--red); }
+
+/* ── PETER SCORE ── */
+.score-row { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+.score-btn {
+  width: 40px; height: 40px;
+  border-radius: 4px; border: 1px solid var(--brd);
+  background: var(--bg3); font-family: var(--font);
+  font-size: 14px; color: var(--mt);
+  cursor: pointer; text-align: center; line-height: 40px;
+  transition: all 0.1s;
+}
+.score-btn.active { border-color: var(--green); background: var(--gdk); color: var(--green); font-weight: 700; }
+
+/* ── SUBMIT ── */
+.submit-btn {
+  width: 100%; padding: 16px;
+  border-radius: 6px; border: none;
+  background: var(--gd); color: var(--wh);
+  font-family: var(--font); font-size: 13px; font-weight: 700;
+  letter-spacing: 3px; cursor: pointer; margin-top: 10px;
+  transition: all 0.2s;
+}
+.submit-btn:active { transform: scale(0.98); background: var(--green); color: var(--bg); }
+.submit-btn.sent { background: var(--gdk); color: var(--gd); }
+
+/* ── WEEKLY PLAN ── */
+.plan-item {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 8px 0; border-bottom: 1px solid var(--brd);
+  cursor: pointer;
+}
+.plan-item:last-child { border-bottom: none; }
+.plan-check {
+  width: 18px; height: 18px; border-radius: 2px; flex-shrink: 0;
+  border: 1px solid var(--brd); background: transparent;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; color: var(--green); transition: all 0.15s;
+}
+.plan-check.done { background: var(--gdk); border-color: var(--green); }
+.plan-text { font-size: 15px; color: var(--wh); line-height: 1.4; }
+.plan-text.done { color: var(--mt); text-decoration: line-through; }
+
+/* ── SCHEDULE (JJ) ── */
+.sched-item {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 8px 0; border-bottom: 1px solid var(--brd);
+}
+.sched-item:last-child { border-bottom: none; }
+.sched-time { font-family: var(--font); font-size: 11px; color: var(--amb); min-width: 48px; flex-shrink: 0; }
+.sched-task { font-size: 14px; color: var(--wh); }
+
+/* ── FEEDBACK ── */
+.feedback {
+  border-radius: 4px; padding: 10px 12px;
+  font-family: var(--font); font-size: 10px; letter-spacing: 1px;
+  margin-top: 8px; border: 1px solid;
+}
+.fb-ok   { background: var(--gdk); border-color: var(--gd); color: var(--green); }
+.fb-warn { background: rgba(255,184,0,.1); border-color: var(--amb); color: var(--amb); }
+.fb-err  { background: rgba(255,59,59,.1); border-color: var(--red); color: var(--red); }
+
+/* ── CELEBRATION OVERLAY ── */
+#celebration {
+  display: none;
+  position: fixed; inset: 0; z-index: 200;
+  background: var(--bg);
+  flex-direction: column;
+  align-items: center; justify-content: center;
+  text-align: center; padding: 40px;
+}
+.cel-icon { font-size: 64px; margin-bottom: 20px; }
+.cel-title { font-family: var(--font); font-size: 18px; color: var(--green); letter-spacing: 3px; margin-bottom: 10px; }
+.cel-sub { font-size: 16px; color: var(--mt); margin-bottom: 30px; }
+.cel-progress { font-family: var(--font); font-size: 13px; color: var(--amb); margin-bottom: 30px; }
+.cel-back {
+  padding: 14px 32px;
+  border-radius: 4px; border: 1px solid var(--gd);
+  background: var(--gdk); color: var(--green);
+  font-family: var(--font); font-size: 11px; letter-spacing: 3px;
+  cursor: pointer;
+}
+
+/* ── REMINDER TOAST ── */
+#reminder-toast {
+  display: none;
+  position: fixed; bottom: 70px; left: 50%; transform: translateX(-50%);
+  width: calc(100% - 28px); max-width: 460px;
+  background: var(--gdk); border: 1px solid var(--green);
+  border-radius: 6px; padding: 14px 16px;
+  z-index: 150; font-family: var(--font); font-size: 11px;
+}
+.rem-text { color: var(--green); letter-spacing: 1px; margin-bottom: 8px; }
+.rem-btn {
+  display: inline-block; padding: 8px 16px;
+  background: var(--gd); color: var(--wh);
+  border-radius: 3px; font-family: var(--font);
+  font-size: 10px; letter-spacing: 2px; cursor: pointer; border: none;
+}
+
+/* ── OFFLINE BADGE ── */
+#offline-badge {
+  display: none;
+  position: fixed; top: 40px; left: 50%; transform: translateX(-50%);
+  background: rgba(255,184,0,.9); color: var(--bg);
+  font-family: var(--font); font-size: 9px; letter-spacing: 2px;
+  padding: 4px 12px; border-radius: 0 0 4px 4px; z-index: 90;
+}
+
+canvas#confetti { position: fixed; inset: 0; pointer-events: none; z-index: 201; }
+</style>
+</head>
+<body>
+
+<!-- MISSION BAR -->
+<div id="mission-bar">
+  <div>
+    <div class="mb-label">PHASE 1 TARGET</div>
+    <div class="mb-val" style="font-size:13px">KES 100K · D+90</div>
+  </div>
+  <div class="mb-progress"><div class="mb-fill" id="mb-fill" style="width:0%"></div></div>
+  <div style="text-align:right">
+    <div class="mb-label">ULTIMATE</div>
+    <div class="mb-val" style="font-size:13px">KES 500K · 2027</div>
+  </div>
+</div>
+
+<!-- OFFLINE BADGE -->
+<div id="offline-badge">⚠ OFFLINE — DATA SAVED LOCALLY</div>
+
+<!-- HOME -->
+<div id="home">
+  <div class="home-header">
+    <div class="home-unit">BAKERY INTEL APP</div>
+    <div class="home-title">BAKERY INTEL</div>
+    <div class="home-sub">CHAGUA WERA WAKO / SELECT YOUR ROLE</div>
+  </div>
+  <div class="role-grid">
+    <div class="role-btn r-jj" onclick="selectRoleWithPin('jj')">
+      <div class="role-icon">🎯</div>
+      <div class="role-name" style="color:var(--amb)">JJ</div>
+      <div class="role-sub">MKURUGENZI · CEO</div>
+    </div>
+    <div class="role-btn r-baker" onclick="selectRoleWithPin('baker')">
+      <div class="role-icon">🍞</div>
+      <div class="role-name" style="color:var(--blu)">BAKER</div>
+      <div class="role-sub">MFANYA MKATE</div>
+    </div>
+    <div class="role-btn r-rider" onclick="selectRoleWithPin('rider')">
+      <div class="role-icon">🏍</div>
+      <div class="role-name" style="color:var(--green)">RIDER</div>
+      <div class="role-sub">MPELEKA · DELIVERY</div>
+    </div>
+    <div class="role-btn r-peter" onclick="selectRoleWithPin('peter')">
+      <div class="role-icon">👨‍🍳</div>
+      <div class="role-name" style="color:var(--pur)">PETER</div>
+      <div class="role-sub">MWANZILISHI · REMOTE</div>
+    </div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <div class="topbar">
+    <div class="tb-left">
+      <span id="tb-badge" class="tb-badge"></span>
+      <div>
+        <div id="tb-name" class="tb-name"></div>
+        <div id="tb-day" class="tb-day"></div>
+      </div>
+    </div>
+    <div class="tb-right">
+      <button class="change-btn" onclick="goHome()">↩ BADILI</button>
+    </div>
+  </div>
+  <div class="content" id="main-content"></div>
+  <div class="bottom-nav" id="bottom-nav"></div>
+</div>
+
+<!-- CELEBRATION -->
+<canvas id="confetti"></canvas>
+<div id="celebration">
+  <div class="cel-icon">✅</div>
+  <div class="cel-title">TUMA RIPOTI IMEFANIKIWA!</div>
+  <div class="cel-sub">Report sent to Intel Vault · Alex will see it in 60 seconds</div>
+  <div class="cel-progress" id="cel-progress"></div>
+  <button class="cel-back" onclick="hideCelebration()">RUDI NYUMBANI</button>
+</div>
+
+<!-- REMINDER -->
+<div id="reminder-toast">
+  <div class="rem-text">🔔 WAKATI WA KUFUNGA RIPOTI YA LEO! / Time to submit your daily report (closes 18:00)</div>
+  <button class="rem-btn" onclick="dismissReminder()">TUMA SASA</button>
+</div>
+
+<script>
+const BRIDGE_URL = 'https://script.google.com/macros/s/AKfycbxYfUu_teLzH0zkERBgb8zPVzSdWPinvwRC0wUqtooFtQKFReJs9xXOBAsZUFFGjFDf/exec';
+
+const ROLES = {
+  jj:    { name:'JJ', color:'var(--amb)', badge:'CEO', badgeBg:'rgba(255,184,0,.15)', badgeBorder:'rgba(255,184,0,.3)' },
+  baker: { name:'Baker', color:'var(--blu)', badge:'BAKER', badgeBg:'rgba(59,170,255,.15)', badgeBorder:'rgba(59,170,255,.3)' },
+  rider: { name:'Rider', color:'var(--green)', badge:'RIDER', badgeBg:'rgba(57,255,110,.15)', badgeBorder:'rgba(57,255,110,.3)' },
+  peter: { name:'Peter', color:'var(--pur)', badge:'FOUNDER', badgeBg:'rgba(180,108,255,.15)', badgeBorder:'rgba(180,108,255,.3)' }
+};
+
+let currentRole = null;
+let activeTab = 0;
+let selectedRating = '1';
+let selectedQuality = '1';
+let selectedOvenStatus = 'running';
+let selectedPeterScore = 7;
+let breadCount = 0;
+let otherCount = 0;
+let cumulativeNet = 42300; const PHASE1_TARGET = 100000; const ULTIMATE_TARGET = 500000; // demo — replace with real data from bridge
+
+function getDayNum() {
+  const d = new Date('2026-04-01');
+  return Math.max(0, Math.floor((new Date() - d) / 86400000));
+}
+
+function getPhase() {
+  const now = new Date();
+  if (now < new Date('2026-04-01')) return 0;
+  if (now < new Date('2026-05-01')) return 1;
+  if (now < new Date('2026-06-01')) return 2;
+  return 3;
+}
+
+function updateMissionBar() {
+  const pct = Math.min(100, Math.round((cumulativeNet / 100000) * 100));
+  document.getElementById('mb-fill').style.width = pct + '%';
+  document.getElementById('mb-pct').textContent = pct + '%';
+}
+
+function submitWorkerReport(report) {
+  const payloadStr = JSON.stringify(report);
+  if (payloadStr.length > 50000) {
+    fetch(BRIDGE_URL, { method:'POST', mode:'no-cors', keepalive:true, headers:{'Content-Type':'text/plain;charset=utf-8'}, body:payloadStr });
+    showCelebration(report);
+    return;
+  }
+  const queued = navigator.sendBeacon ? navigator.sendBeacon(BRIDGE_URL, payloadStr) : false;
+  if (!queued) {
+    fetch(BRIDGE_URL, { method:'POST', mode:'no-cors', headers:{'Content-Type':'text/plain;charset=utf-8'}, body:payloadStr }).catch(()=>{});
+    localStorage.setItem('b8-offline-queue-' + Date.now(), payloadStr);
+    document.getElementById('offline-badge').style.display = 'block';
+  }
+  showCelebration(report);
+}
+
+const PINS = { jj:'4321', baker:'1111', rider:'2222', peter:'7890' };
+const PIN_EXPIRY = 24 * 60 * 60 * 1000; // 24h in ms
+
+function checkPinExpired(role) {
+  const stored = localStorage.getItem('pin-auth-' + role);
+  if (!stored) return true;
+  return (Date.now() - parseInt(stored)) > PIN_EXPIRY;
+}
+
+function showPinDialog(role) {
+  const overlay = document.createElement('div');
+  overlay.id = 'pin-overlay';
+  overlay.style.cssText = 'position:fixed;inset:0;background:#060a08;z-index:300;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px;';
+  const colors = {jj:'var(--amb)',baker:'var(--blu)',rider:'var(--green)',peter:'var(--pur)'};
+  const names = {jj:'JJ',baker:'BAKER',rider:'RIDER',peter:'PETER'};
+  overlay.innerHTML = `
+    <div style="font-family:var(--font);font-size:10px;color:var(--mt);letter-spacing:3px;margin-bottom:8px">BAKERY INTEL APP</div>
+    <div style="font-size:22px;font-weight:700;color:${colors[role]};margin-bottom:6px;font-family:var(--font)">${names[role]}</div>
+    <div style="font-family:var(--font);font-size:9px;color:var(--mt);letter-spacing:2px;margin-bottom:28px">ENTER PIN TO CONTINUE</div>
+    <div id="pin-dots" style="display:flex;gap:12px;margin-bottom:24px">
+      <div class="pdot" style="width:14px;height:14px;border-radius:50%;border:2px solid var(--mt)"></div>
+      <div class="pdot" style="width:14px;height:14px;border-radius:50%;border:2px solid var(--mt)"></div>
+      <div class="pdot" style="width:14px;height:14px;border-radius:50%;border:2px solid var(--mt)"></div>
+      <div class="pdot" style="width:14px;height:14px;border-radius:50%;border:2px solid var(--mt)"></div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:220px">
+      ${[1,2,3,4,5,6,7,8,9,'←',0,'✕'].map(n=>`
+        <button onclick="pinKey('${role}','${n}')" style="height:58px;border-radius:6px;border:1px solid var(--brd);background:var(--bg2);color:var(--wh);font-family:var(--font);font-size:20px;cursor:pointer;touch-action:manipulation;">${n}</button>
+      `).join('')}
+    </div>
+    <div id="pin-err" style="font-family:var(--font);font-size:9px;color:var(--red);letter-spacing:2px;margin-top:16px;opacity:0;transition:opacity 0.3s">WRONG PIN</div>
+  `;
+  document.body.appendChild(overlay);
+  window._pinBuf = '';
+  window._pinRole = role;
+}
+
+function pinKey(role, key) {
+  if (key === '✕') { document.getElementById('pin-overlay')?.remove(); return; }
+  if (key === '←') { window._pinBuf = window._pinBuf.slice(0,-1); }
+  else if (window._pinBuf.length < 4) { window._pinBuf += key; }
+  // update dots
+  const dots = document.querySelectorAll('.pdot');
+  dots.forEach((d,i) => {
+    d.style.background = i < window._pinBuf.length ? 'var(--green)' : 'transparent';
+    d.style.borderColor = i < window._pinBuf.length ? 'var(--green)' : 'var(--mt)';
+  });
+  if (window._pinBuf.length === 4) {
+    setTimeout(() => {
+      if (window._pinBuf === PINS[role]) {
+        localStorage.setItem('pin-auth-' + role, Date.now().toString());
+        document.getElementById('pin-overlay')?.remove();
+        enterRole(role);
+      } else {
+        const err = document.getElementById('pin-err');
+        if (err) { err.style.opacity = '1'; setTimeout(()=>err.style.opacity='0', 1500); }
+        window._pinBuf = '';
+        document.querySelectorAll('.pdot').forEach(d => { d.style.background='transparent'; d.style.borderColor='var(--mt)'; });
+      }
+    }, 100);
+  }
+}
+
+function selectRoleWithPin(role) {
+  if (checkPinExpired(role)) { showPinDialog(role); }
+  else { enterRole(role); }
+}
+
+function enterRole(role) {
+  currentRole = role;
+  const r = ROLES[role];
+  document.getElementById('home').style.display = 'none';
+  const app = document.getElementById('app');
+  app.style.display = 'flex';
+  const badge = document.getElementById('tb-badge');
+  badge.textContent = r.badge;
+  badge.style.background = r.badgeBg;
+  badge.style.color = r.color;
+  badge.style.border = '1px solid ' + r.badgeBorder;
+  document.getElementById('tb-name').textContent = r.name;
+  const dNum = getDayNum();
+  document.getElementById('tb-day').textContent = 'D+' + dNum + ' · ' + new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}).toUpperCase();
+  activeTab = 0;
+  renderApp();
+}
+
+function goHome() {
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('home').style.display = 'flex';
+  currentRole = null;
+}
+
+function renderApp() {
+  const tabs = {
+    jj:    [{icon:'📋',lbl:'SITREP'},{icon:'📅',lbl:'SCHEDULE'},{icon:'⚡',lbl:'ISSUES'},{icon:'📊',lbl:'PLAN'}],
+    baker: [{icon:'🍞',lbl:'PRODUCTION'},{icon:'🌡',lbl:'QUALITY'},{icon:'📊',lbl:'PLAN'}],
+    rider: [{icon:'🚗',lbl:'DELIVERY'},{icon:'📣',lbl:'MARKETING'},{icon:'📊',lbl:'PLAN'}],
+    peter: [{icon:'📖',lbl:'DIARY'},{icon:'🍞',lbl:'RECIPE'},{icon:'📊',lbl:'PLAN'}]
+  };
+  const t = tabs[currentRole];
+  document.getElementById('bottom-nav').innerHTML = t.map((tab,i)=>
+    `<button class="nav-item${i===activeTab?' active':''}" onclick="switchTab(${i})"><span class="nav-icon">${tab.icon}</span>${tab.lbl}</button>`
+  ).join('');
+  renderContent();
+}
+
+function switchTab(i) { activeTab = i; renderApp(); }
+
+function renderContent() {
+  const renders = {
+    jj:    [renderJJSitrep, renderJJSchedule, renderJJIssues, renderPlan],
+    baker: [renderBakerProd, renderBakerQuality, renderPlan],
+    rider: [renderRiderDelivery, renderRiderMarketing, renderPlan],
+    peter: [renderPeterDiary, renderPeterRecipe, renderPlan]
+  };
+  renders[currentRole][activeTab]();
+}
+
+// ══ JJ SITREP ══
+function renderJJSitrep() {
+  document.getElementById('main-content').innerHTML = `
+  <div class="sec-label">DAILY SITREP — ${new Date().toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'short'}).toUpperCase()}</div>
+
+  <div class="card">
+    <div class="field">
+      <div class="field-label">Revenue Today / Mapato (KES)</div>
+      <div class="field-sub">Total cash from all sales</div>
+      <input class="inp inp-right" id="j-rev" type="number" placeholder="0" min="0" inputmode="numeric" oninput="updateNet()">
+    </div>
+    <div class="field">
+      <div class="field-label">Costs Today / Gharama (KES)</div>
+      <div class="field-sub">All expenses paid today</div>
+      <input class="inp inp-right" id="j-cost" type="number" placeholder="0" min="0" inputmode="numeric" oninput="updateNet()">
+    </div>
+    <div class="net-box">
+      <div class="net-label">NET PROFIT TODAY / FAIDA YA LEO</div>
+      <div class="net-val" id="net-val">KES 0</div>
+    </div>
+    <div class="field">
+      <div class="field-label">Bread Sold / Mkate Uliouzwa</div>
+      <input class="inp inp-right" id="j-bread" type="number" placeholder="0" min="0" inputmode="numeric">
+    </div>
+    <div class="field">
+      <div class="field-label">Cakes Sold / Keki</div>
+      <input class="inp inp-right" id="j-cakes" type="number" placeholder="0" min="0" inputmode="numeric">
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="field">
+      <div class="field-label">Supplier Debt / Deni la Wasambazaji (KES)</div>
+      <div class="field-sub">Total owed to suppliers right now</div>
+      <input class="inp inp-right" id="j-debt" type="number" placeholder="0" min="0" inputmode="numeric">
+    </div>
+    <div class="field">
+      <div class="field-label">Oven Status / Hali ya Tanuri</div>
+      <div class="status-row">
+        <button class="stat-btn active-ok" id="ov-run" onclick="setOven('running',this,'active-ok')">✅ RUNNING</button>
+        <button class="stat-btn" id="ov-iss" onclick="setOven('issue',this,'active-warn')">⚠ ISSUE</button>
+        <button class="stat-btn" id="ov-off" onclick="setOven('offline',this,'active-err')">❌ OFFLINE</button>
+      </div>
+    </div>
+    <div class="field">
+      <div class="field-label">Peter Cooperation / Ushirikiano wa Peter (1-10)</div>
+      <div class="field-sub">How well did Peter support operations today?</div>
+      <div class="score-row" id="peter-score-row"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="field">
+      <div class="field-label">Daily Rating / Tathmini ya Leo</div>
+      <div class="rating-row">
+        <button class="rat-btn sel-1" id="rat-1" onclick="setRating('1')">1<br>ALL GOOD</button>
+        <button class="rat-btn" id="rat-2" onclick="setRating('2')">2<br>ISSUE</button>
+        <button class="rat-btn" id="rat-3" onclick="setRating('3')">3<br>EMERGENCY</button>
+      </div>
+    </div>
+    <div class="field">
+      <div class="field-label">Notes / Maelezo</div>
+      <textarea class="inp" id="j-notes" placeholder="Key events, problems, wins today..."></textarea>
+    </div>
+  </div>
+
+  <button class="submit-btn" id="jj-sub" onclick="submitJJ()">TUMA RIPOTI → INTEL VAULT</button>
+  <div id="jj-fb"></div>`;
+
+  // Peter score buttons
+  const row = document.getElementById('peter-score-row');
+  for(let i=1;i<=10;i++) {
+    const b = document.createElement('button');
+    b.className = 'score-btn' + (i===selectedPeterScore?' active':'');
+    b.textContent = i;
+    b.onclick = () => { selectedPeterScore=i; document.querySelectorAll('.score-btn').forEach(x=>x.classList.remove('active')); b.classList.add('active'); };
+    row.appendChild(b);
+  }
+}
+
+function updateNet() {
+  const rev = parseInt(document.getElementById('j-rev')?.value)||0;
+  const cost = parseInt(document.getElementById('j-cost')?.value)||0;
+  const net = rev - cost;
+  const el = document.getElementById('net-val');
+  if(el) { el.textContent = (net>=0?'+':'') + 'KES ' + net.toLocaleString(); el.className = 'net-val' + (net<0?' negative':''); }
+}
+
+let ovenBtns = {};
+function setOven(status, btn, cls) {
+  selectedOvenStatus = status;
+  ['ov-run','ov-iss','ov-off'].forEach(id => {
+    const el = document.getElementById(id);
+    if(el) el.className = 'stat-btn';
+  });
+  btn.className = 'stat-btn ' + cls;
+}
+
+function setRating(r) {
+  selectedRating = r;
+  ['1','2','3'].forEach(n => {
+    const el = document.getElementById('rat-'+n);
+    if(el) el.className = 'rat-btn' + (n===r?' sel-'+n:'');
+  });
+}
+
+async function submitJJ() {
+  const rev = parseInt(document.getElementById('j-rev').value)||0;
+  const cost = parseInt(document.getElementById('j-cost').value)||0;
+  const report = {
+    submission_id: Date.now().toString(),
+    date: new Date().toISOString().split('T')[0],
+    role: 'jj',
+    timestamp_submit: new Date().toISOString(),
+    revenue_kes: rev,
+    costs_kes: cost,
+    bread_units: parseInt(document.getElementById('j-bread').value)||0,
+    cakes_units: parseInt(document.getElementById('j-cakes').value)||0,
+    cash_collected_kes: rev,
+    supplier_debt_kes: parseInt(document.getElementById('j-debt').value)||0,
+    oven_status: selectedOvenStatus,
+    marcus_interaction_score: selectedPeterScore,
+    sitrep_rating: parseInt(selectedRating),
+    notes: document.getElementById('j-notes').value
+  };
+  // Save locally
+  const existing = JSON.parse(localStorage.getItem('b8-reports')||'[]');
+  existing.unshift(report);
+  localStorage.setItem('b8-reports', JSON.stringify(existing));
+  submitWorkerReport(report);
+}
+
+// ══ JJ SCHEDULE ══
+function renderJJSchedule() {
+  const schedule = [
+    ['07:00', 'Arrive on site — check oven and power status'],
+    ['07:15', 'Stand-up with Baker + Rider (3 min priorities)'],
+    ['07:30', 'Supervise production — quality check first batch'],
+    ['10:00', 'Supplier calls — negotiate bulk order terms'],
+    ['11:00', 'Store fit-out OR Kenya Power follow-up'],
+    ['13:00', 'Lunch + customer taste test feedback'],
+    ['14:00', 'Marketing round with Rider — flyers + B2B'],
+    ['16:00', 'Cash collection + end-of-day reconciliation'],
+    ['18:00', 'Close cash book'],
+    ['18:15', 'Submit SITREP in this app'],
+  ];
+  document.getElementById('main-content').innerHTML = `
+  <div class="sec-label">DAILY SCHEDULE — CEO BAKERY INTEL</div>
+  <div class="card">
+    ${schedule.map(([t,d])=>`<div class="sched-item"><div class="sched-time">${t}</div><div class="sched-task">${d}</div></div>`).join('')}
+  </div>`;
+}
+
+// ══ JJ ISSUES ══
+function renderJJIssues() {
+  document.getElementById('main-content').innerHTML = `
+  <div class="sec-label">ISSUE / REQUEST — INTEL VAULT</div>
+  <div class="card">
+    <div class="field">
+      <div class="field-label">Issue Type</div>
+      <div class="status-row" style="flex-wrap:wrap;gap:6px;margin-top:8px">
+        <button class="stat-btn active-ok" id="iss-ops" onclick="setIssType('ops',this,'active-ok')">OPERATIONAL</button>
+        <button class="stat-btn" id="iss-bud" onclick="setIssType('budget',this,'active-warn')">BUDGET REQUEST</button>
+        <button class="stat-btn" id="iss-emg" onclick="setIssType('emergency',this,'active-err')">EMERGENCY</button>
+      </div>
+    </div>
+    <div class="field">
+      <div class="field-label">Amount (KES) — if budget request</div>
+      <input class="inp inp-right" id="iss-amt" type="number" placeholder="0" inputmode="numeric">
+    </div>
+    <div class="field">
+      <div class="field-label">Description / Maelezo</div>
+      <textarea class="inp" id="iss-desc" placeholder="Describe the issue or request..."></textarea>
+    </div>
+    <div class="field">
+      <div class="field-label">Suggested Solution / Suluhisho</div>
+      <textarea class="inp" id="iss-sol" placeholder="What do you recommend?"></textarea>
+    </div>
+  </div>
+  <button class="submit-btn" onclick="submitIssue()">TUMA KWA ALEX → INTEL VAULT</button>
+  <div id="iss-fb"></div>`;
+}
+
+let issType = 'ops';
+function setIssType(type, btn, cls) {
+  issType = type;
+  ['iss-ops','iss-bud','iss-emg'].forEach(id => {
+    const el = document.getElementById(id);
+    if(el) el.className = 'stat-btn';
+  });
+  btn.className = 'stat-btn ' + cls;
+}
+
+function submitIssue() {
+  const report = {
+    submission_id: Date.now().toString(),
+    date: new Date().toISOString().split('T')[0],
+    role: 'jj', type: 'issue',
+    timestamp_submit: new Date().toISOString(),
+    issue_type: issType,
+    amount: parseInt(document.getElementById('iss-amt').value)||0,
+    notes: document.getElementById('iss-desc').value + ' | Solution: ' + document.getElementById('iss-sol').value
+  };
+  submitWorkerReport(report);
+}
+
+// ══ BAKER PRODUCTION ══
+function renderBakerProd() {
+  breadCount = 0; otherCount = 0;
+  document.getElementById('main-content').innerHTML = `
+  <div class="sec-label">PRODUCTION LOG — ${new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short'}).toUpperCase()}</div>
+
+  <div class="card">
+    <div class="field">
+      <div class="field-label">Bread Produced / Mkate Iliyotengenezwa</div>
+      <div class="counter">
+        <button class="cnt-btn" onclick="adjustCount('bread',-1)">−</button>
+        <div class="cnt-val" id="bread-cnt">0</div>
+        <button class="cnt-btn" onclick="adjustCount('bread',1)">+</button>
+      </div>
+    </div>
+    <div class="field">
+      <div class="field-label">Other Items / Vingine (Cakes + Mandazi)</div>
+      <div class="counter">
+        <button class="cnt-btn" onclick="adjustCount('other',-1)">−</button>
+        <div class="cnt-val" id="other-cnt">0</div>
+        <button class="cnt-btn" onclick="adjustCount('other',1)">+</button>
+      </div>
+    </div>
+    <div class="field">
+      <div class="field-label">Quality / Ubora wa Mkate</div>
+      <div class="quality-row">
+        <div class="qual-btn active" id="q-good" onclick="setQuality('1',this)">👍</div>
+        <div class="qual-btn" id="q-warn" onclick="setQuality('2',this)">⚠️</div>
+        <div class="qual-btn" id="q-bad"  onclick="setQuality('3',this)">❌</div>
+      </div>
+    </div>
+    <div class="field">
+      <div class="field-label">Note for Peter / Kumbuka kwa Peter</div>
+      <textarea class="inp" id="b-note" placeholder="Texture, taste, baking time issues..."></textarea>
+    </div>
+  </div>
+
+  <button class="submit-btn" onclick="submitBaker()">TUMA RIPOTI → INTEL VAULT</button>
+  <div id="baker-fb"></div>`;
+}
+
+function adjustCount(type, delta) {
+  if(type==='bread') { breadCount = Math.max(0, breadCount+delta); document.getElementById('bread-cnt').textContent = breadCount; }
+  else { otherCount = Math.max(0, otherCount+delta); document.getElementById('other-cnt').textContent = otherCount; }
+}
+
+function setQuality(q, btn) {
+  selectedQuality = q;
+  ['q-good','q-warn','q-bad'].forEach(id => document.getElementById(id)?.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function submitBaker() {
+  const report = {
+    submission_id: Date.now().toString(),
+    date: new Date().toISOString().split('T')[0],
+    role: 'baker', type: 'production',
+    timestamp_submit: new Date().toISOString(),
+    bread_units: breadCount,
+    cakes_units: otherCount,
+    sitrep_rating: parseInt(selectedQuality),
+    notes: document.getElementById('b-note').value
+  };
+  submitWorkerReport(report);
+}
+
+// ══ BAKER QUALITY ══
+function renderBakerQuality() {
+  document.getElementById('main-content').innerHTML = `
+  <div class="sec-label">QUALITY CHECK — PETER NOTES</div>
+  <div class="card">
+    <div class="field">
+      <div class="field-label">Oven Temperature Used / Joto la Tanuri (°C)</div>
+      <input class="inp inp-right" id="q-temp" type="number" placeholder="180" inputmode="numeric">
+    </div>
+    <div class="field">
+      <div class="field-label">Baking Time / Muda wa Kuoka (min)</div>
+      <input class="inp inp-right" id="q-time" type="number" placeholder="35" inputmode="numeric">
+    </div>
+    <div class="field">
+      <div class="field-label">Quality Issue / Tatizo la Ubora</div>
+      <textarea class="inp" id="q-issue" placeholder="Describe texture, taste, colour issues..."></textarea>
+    </div>
+    <div class="field">
+      <div class="field-label">Recipe Change Tried / Mabadiliko ya Mapishi</div>
+      <textarea class="inp" id="q-change" placeholder="What did you adjust?"></textarea>
+    </div>
+  </div>
+  <button class="submit-btn" onclick="submitBakerQuality()">TUMA KWA PETER + INTEL</button>
+  <div id="bq-fb"></div>`;
+}
+
+function submitBakerQuality() {
+  const report = {
+    submission_id: Date.now().toString(),
+    date: new Date().toISOString().split('T')[0],
+    role: 'baker', type: 'quality',
+    timestamp_submit: new Date().toISOString(),
+    notes: `Temp:${document.getElementById('q-temp').value}°C Time:${document.getElementById('q-time').value}min Issue:${document.getElementById('q-issue').value} Change:${document.getElementById('q-change').value}`
+  };
+  submitWorkerReport(report);
+}
+
+// ══ RIDER DELIVERY ══
+function renderRiderDelivery() {
+  document.getElementById('main-content').innerHTML = `
+  <div class="sec-label">DELIVERY LOG — ${new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short'}).toUpperCase()}</div>
+  <div class="card">
+    <div class="field">
+      <div class="field-label">Deliveries Completed / Deliveries Zilizokamilika</div>
+      <input class="inp inp-right" id="r-del" type="number" placeholder="0" inputmode="numeric">
+    </div>
+    <div class="field">
+      <div class="field-label">Cash Collected / Pesa Iliyokusanywa (KES)</div>
+      <input class="inp inp-right" id="r-cash" type="number" placeholder="0" inputmode="numeric">
+    </div>
+    <div class="field">
+      <div class="field-label">Cash Deposited to JJ / Pesa Iliyotolewa (KES)</div>
+      <input class="inp inp-right" id="r-dep" type="number" placeholder="0" inputmode="numeric">
+    </div>
+    <div class="field">
+      <div class="field-label">Km Ridden / Km Zilizosafiriwa</div>
+      <input class="inp inp-right" id="r-km" type="number" placeholder="0" inputmode="numeric">
+    </div>
+    <div class="field">
+      <div class="field-label">Zones Covered / Maeneo Yaliyofikiwa</div>
+      <input class="inp" id="r-zones" type="text" placeholder="Kimana, Sineti, Loitoktok...">
+    </div>
+    <div class="field">
+      <div class="field-label">Notes / Maelezo</div>
+      <textarea class="inp" id="r-notes" placeholder="Problems, customer feedback..."></textarea>
+    </div>
+  </div>
+  <button class="submit-btn" onclick="submitRiderDelivery()">TUMA RIPOTI → INTEL VAULT</button>
+  <div id="rider-fb"></div>`;
+}
+
+function submitRiderDelivery() {
+  const collected = parseInt(document.getElementById('r-cash').value)||0;
+  const deposited = parseInt(document.getElementById('r-dep').value)||0;
+  const report = {
+    submission_id: Date.now().toString(),
+    date: new Date().toISOString().split('T')[0],
+    role: 'rider', type: 'delivery',
+    timestamp_submit: new Date().toISOString(),
+    revenue_kes: collected,
+    cash_collected_kes: collected,
+    cash_deposited_kes: deposited,
+    bread_units: parseInt(document.getElementById('r-del').value)||0,
+    notes: `Zones:${document.getElementById('r-zones').value} Km:${document.getElementById('r-km').value} ${document.getElementById('r-notes').value}`
+  };
+  submitWorkerReport(report);
+}
+
+// ══ RIDER MARKETING ══
+function renderRiderMarketing() {
+  document.getElementById('main-content').innerHTML = `
+  <div class="sec-label">MARKETING LOG — OUTREACH TODAY</div>
+  <div class="card">
+    <div class="field">
+      <div class="field-label">Flyers Distributed / Flyers Zilizogawiwa</div>
+      <input class="inp inp-right" id="m-fly" type="number" placeholder="0" inputmode="numeric">
+    </div>
+    <div class="field">
+      <div class="field-label">New WhatsApp Contacts / Anwani Mpya za WA</div>
+      <input class="inp inp-right" id="m-wa" type="number" placeholder="0" inputmode="numeric">
+    </div>
+    <div class="field">
+      <div class="field-label">B2B Visits (Schools/Lodges/Offices)</div>
+      <input class="inp inp-right" id="m-b2b" type="number" placeholder="0" inputmode="numeric">
+    </div>
+    <div class="field">
+      <div class="field-label">Best Lead Today / Mteja Bora wa Leo</div>
+      <input class="inp" id="m-lead" type="text" placeholder="Name, business, phone...">
+    </div>
+    <div class="field">
+      <div class="field-label">Customer Feedback / Maoni ya Wateja</div>
+      <textarea class="inp" id="m-fb" placeholder="What customers said about bread/cakes..."></textarea>
+    </div>
+  </div>
+  <button class="submit-btn" onclick="submitMarketing()">TUMA RIPOTI → INTEL VAULT</button>
+  <div id="mkt-fb"></div>`;
+}
+
+function submitMarketing() {
+  const report = {
+    submission_id: Date.now().toString(),
+    date: new Date().toISOString().split('T')[0],
+    role: 'rider', type: 'marketing',
+    timestamp_submit: new Date().toISOString(),
+    notes: `Flyers:${document.getElementById('m-fly').value} WA:${document.getElementById('m-wa').value} B2B:${document.getElementById('m-b2b').value} Lead:${document.getElementById('m-lead').value} FB:${document.getElementById('m-fb').value}`
+  };
+  submitWorkerReport(report);
+}
+
+// ══ PETER DIARY ══
+function renderPeterDiary() {
+  document.getElementById('main-content').innerHTML = `
+  <div class="sec-label">DAILY DIARY — PETER REMOTE</div>
+  <div style="background:rgba(57,255,110,.05);border:1px solid var(--gd);border-radius:6px;padding:12px;margin-bottom:12px;">
+    <div style="font-family:var(--font);font-size:9px;color:var(--green);letter-spacing:2px;margin-bottom:4px">YOUR MISSION TODAY</div>
+    <div style="font-size:14px;color:var(--wh)">Your notes help JJ launch bread. Peter earns credit when we hit KES 100k (Jun 2026) and KES 500k (2027).</div>
+  </div>
+  <div class="card">
+    <div class="field">
+      <div class="field-label">Today's Observations / Maoni ya Leo</div>
+      <textarea class="inp" id="p-diary" placeholder="What did you observe or think about today regarding the bakery?"></textarea>
+    </div>
+    <div class="field">
+      <div class="field-label">Feedback on JJ / Maoni kuhusu JJ</div>
+      <textarea class="inp" id="p-jj" placeholder="Positive or constructive feedback on JJ's work..."></textarea>
+    </div>
+    <div class="field">
+      <div class="field-label">Business Ideas / Mawazo ya Biashara</div>
+      <textarea class="inp" id="p-ideas" placeholder="New products, clients, improvements..."></textarea>
+    </div>
+    <div class="field">
+      <div class="field-label">Question for Alex / Swali kwa Alex</div>
+      <textarea class="inp" id="p-q" placeholder="Ask anything about the project..."></textarea>
+    </div>
+  </div>
+  <button class="submit-btn" onclick="submitPeterDiary()">TUMA RIPOTI → INTEL VAULT</button>
+  <div id="peter-fb"></div>`;
+}
+
+function submitPeterDiary() {
+  const report = {
+    submission_id: Date.now().toString(),
+    date: new Date().toISOString().split('T')[0],
+    role: 'peter', type: 'diary',
+    timestamp_submit: new Date().toISOString(),
+    notes: `Diary:${document.getElementById('p-diary').value} JJ:${document.getElementById('p-jj').value} Ideas:${document.getElementById('p-ideas').value} Q:${document.getElementById('p-q').value}`
+  };
+  submitWorkerReport(report);
+}
+
+// ══ PETER RECIPE ══
+function renderPeterRecipe() {
+  document.getElementById('main-content').innerHTML = `
+  <div class="sec-label">RECIPE NOTE FOR BAKER</div>
+  <div class="card">
+    <div class="field">
+      <div class="field-label">Product / Bidhaa</div>
+      <input class="inp" id="rec-prod" type="text" placeholder="White bread, chocolate cake...">
+    </div>
+    <div class="field">
+      <div class="field-label">Recipe Instruction / Maelekezo ya Mapishi</div>
+      <textarea class="inp" id="rec-note" style="min-height:120px" placeholder="Specific instructions, amounts, temperatures, timing..."></textarea>
+    </div>
+    <div class="field">
+      <div class="field-label">Priority / Kipaumbele</div>
+      <div class="rating-row">
+        <button class="rat-btn sel-1" id="rec-norm" onclick="setRecPri('normal',this,'sel-1')">NORMAL</button>
+        <button class="rat-btn" id="rec-urg" onclick="setRecPri('urgent',this,'sel-2')">URGENT FIX</button>
+      </div>
+    </div>
+  </div>
+  <button class="submit-btn" onclick="submitRecipe()">TUMA KWA BAKER + INTEL</button>
+  <div id="rec-fb"></div>`;
+}
+
+let recPri = 'normal';
+function setRecPri(p, btn, cls) {
+  recPri = p;
+  ['rec-norm','rec-urg'].forEach(id => document.getElementById(id).className = 'rat-btn');
+  btn.className = 'rat-btn ' + cls;
+}
+
+function submitRecipe() {
+  const report = {
+    submission_id: Date.now().toString(),
+    date: new Date().toISOString().split('T')[0],
+    role: 'peter', type: 'recipe',
+    timestamp_submit: new Date().toISOString(),
+    notes: `Product:${document.getElementById('rec-prod').value} Priority:${recPri} Recipe:${document.getElementById('rec-note').value}`
+  };
+  submitWorkerReport(report);
+}
+
+// ══ WEEKLY PLAN ══
+function renderPlan() {
+  const phase = getPhase();
+  const plans = {
+    jj: [
+      ['Coordinate Kenya Power 3-phase quote + electrician', false],
+      ['Negotiate bulk flour/sugar order — pay old debt', false],
+      ['Supervise physical store fit-out + signage', false],
+      ['Run first bread test batches (min 100 loaves/day)', false],
+      ['Meet Kenyan lawyer — contracts + land transfer', false],
+    ],
+    baker: [
+      ['Calibrate oven temperature once connected (180/200/220°C)', false],
+      ['Follow Peter recipe exactly — log any adjustments', false],
+      ['Produce minimum 150 bread loaves daily', false],
+      ['Daily cleaning of mixer + trays', false],
+    ],
+    rider: [
+      ['Deliver to all current customers + scout store location', false],
+      ['Distribute minimum 80 flyers per day', false],
+      ['Collect 15 new WhatsApp contacts daily', false],
+      ['Visit 2 wholesale clients (school/lodge) — log details', false],
+    ],
+    peter: [
+      ['Send bread recipe adjustments Monday + Thursday', false],
+      ['Review Baker quality notes — reply within 24h', false],
+      ['Wednesday 15-min call with JJ (recorded)', false],
+      ['Review lawyer documents by 15 April', false],
+    ]
+  };
+  const phaseName = ['P0 MOBILISATION','P1 SETUP & STABILISE','P2 GROW','P3 FOOD HUB'][phase];
+  const items = plans[currentRole];
+  const saved = JSON.parse(localStorage.getItem('plan-checks-'+currentRole)||'[]');
+
+  document.getElementById('main-content').innerHTML = `
+  <div class="sec-label">${phaseName} — WEEK PLAN</div>
+  <div class="card">
+    ${items.map((item,i)=>`
+    <div class="plan-item" onclick="togglePlan(${i})">
+      <div class="plan-check${saved.includes(i)?' done':''}" id="pc-${i}">${saved.includes(i)?'✓':''}</div>
+      <div class="plan-text${saved.includes(i)?' done':''}" id="pt-${i}">${item[0]}</div>
+    </div>`).join('')}
+  </div>
+  <div style="font-family:var(--font);font-size:9px;color:var(--mt);text-align:center;margin-top:10px;letter-spacing:1px">
+    Checkmarks reset every Monday · Alex controls the plan
+  </div>`;
+}
+
+function togglePlan(i) {
+  const saved = JSON.parse(localStorage.getItem('plan-checks-'+currentRole)||'[]');
+  const idx = saved.indexOf(i);
+  if(idx>=0) saved.splice(idx,1); else saved.push(i);
+  localStorage.setItem('plan-checks-'+currentRole, JSON.stringify(saved));
+  const check = document.getElementById('pc-'+i);
+  const text = document.getElementById('pt-'+i);
+  if(check) { check.className = 'plan-check'+(idx<0?' done':''); check.textContent = idx<0?'✓':''; }
+  if(text) text.className = 'plan-text'+(idx<0?' done':'');
+}
+
+// ══ CELEBRATION ══
+function showCelebration(report) {
+  const cel = document.getElementById('celebration');
+  cel.style.display = 'flex';
+  const net = report.revenue_kes ? report.revenue_kes - (report.costs_kes||0) : 0;
+  document.getElementById('cel-progress').textContent = net > 0 ? `+KES ${net.toLocaleString()} toward KES 100,000 — Phase 1 of KES 500,000` : 'Report saved to Intel Vault';
+  launchConfetti();
+}
+
+function hideCelebration() {
+  document.getElementById('celebration').style.display = 'none';
+  goHome();
+}
+
+function launchConfetti() {
+  const canvas = document.getElementById('confetti');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  const pieces = Array.from({length:80},()=>({
+    x: Math.random()*canvas.width, y: -10,
+    w: Math.random()*8+4, h: Math.random()*12+6,
+    color: ['#39ff6e','#ffb800','#3baaff','#ff3b3b','#b46cff'][Math.floor(Math.random()*5)],
+    rot: Math.random()*360, vx: Math.random()*4-2, vy: Math.random()*4+2, vr: Math.random()*6-3
+  }));
+  let frame = 0;
+  function draw() {
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    pieces.forEach(p=>{
+      ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.rot*Math.PI/180);
+      ctx.fillStyle = p.color; ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h); ctx.restore();
+      p.x+=p.vx; p.y+=p.vy; p.rot+=p.vr; p.vy+=0.1;
+    });
+    frame++;
+    if(frame < 120) requestAnimationFrame(draw); else ctx.clearRect(0,0,canvas.width,canvas.height);
+  }
+  draw();
+}
+
+// ══ REMINDER ══
+function checkReminder() {
+  const now = new Date().toLocaleString('en-US',{timeZone:'Africa/Nairobi'});
+  const h = new Date(now).getHours();
+  const m = new Date(now).getMinutes();
+  const toast = document.getElementById('reminder-toast');
+  if(h===17 && m>=40 && m<=55) { toast.style.display = 'block'; }
+  else { toast.style.display = 'none'; }
+}
+function dismissReminder() {
+  document.getElementById('reminder-toast').style.display = 'none';
+}
+setInterval(checkReminder, 60000);
+checkReminder();
+
+// ══ OFFLINE ──
+window.addEventListener('online', () => { document.getElementById('offline-badge').style.display = 'none'; });
+window.addEventListener('offline', () => { document.getElementById('offline-badge').style.display = 'block'; });
+if(!navigator.onLine) document.getElementById('offline-badge').style.display = 'block';
+
+// ── INIT ──
+updateMissionBar();
+</script>
+</body>
+</html>
